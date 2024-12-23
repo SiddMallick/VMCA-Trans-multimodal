@@ -2,6 +2,7 @@ from .vmca import ValueMixedCrossAttention
 import torch
 import torch.nn as nn
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # BiLSTM Layer
 class BiLSTM(nn.Module):
     def __init__(self, input_dim, hidden_dim, num_layers=1):

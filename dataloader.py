@@ -15,7 +15,7 @@ class SentimentDataset(Dataset):
   def __getitem__(self, item):
     text = self.text[item]
     try:
-      image_path = "/home/jayanta_rs/Project/jayanta/all_project_code/Multimodal_sentiment_analysis/Images/"+str(self.image[item])
+      image_path = "<path-to-images>"+str(self.image[item])
       image = Image.open(image_path).convert('RGB')
     except:
       return None, None, None

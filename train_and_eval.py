@@ -5,9 +5,9 @@ from torchvision import transforms
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from .dataloader import create_data_loader
+from dataloader import create_data_loader
 from model.model_builder import model_build_multimodal
-from .utils import train_fn, check_accuracy
+from utils import train_fn, check_accuracy
 
 # Define hyperparameters
 RANDOM_SEED = 42
@@ -18,11 +18,12 @@ val_split = 0.5 # How much percent of validation data will be the test data
 num_workers = 4
 batch_size = 16
 num_classes = 2  # Number of sentiment classes (e.g., negative, neutral, positive)
+num_transformer_layers = 6
 # Define device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Read dataset
-df = pd.read_csv('/home/jayanta_rs/Project/jayanta/all_project_code/Multimodal_sentiment_analysis/all_train.csv')
+# Read dataset (Change the path here)
+df = pd.read_csv('<path_to_all_train_csv>/all_train.csv')
 
 # Split the data
 df_train, df_test = train_test_split(df, test_size = test_split, random_state=RANDOM_SEED)
@@ -36,10 +37,10 @@ data_transforms = transforms.Compose([
 ])
 
 
-train_dataloader = create_data_loader(df_train, batch_size = batch_size, transform = data_transforms)
-val_dataloader = create_data_loader(df_val, batch_size = batch_size, transform = data_transforms)
+train_dataloader = create_data_loader(df_train, batch_size = batch_size, transform = data_transforms, num_workers=num_workers)
+val_dataloader = create_data_loader(df_val, batch_size = batch_size, transform = data_transforms, num_workers=num_workers)
 
-model = model_build_multimodal(2,6).to(device=device) #Best case result for binary classification
+model = model_build_multimodal(num_classes=num_classes,trans_num_layers=num_transformer_layers).to(device=device) #Best case result for binary classification
 
 loss_fn = nn.CrossEntropyLoss()
 optimizer = optim.AdamW(model.parameters(),lr=learning_rate)
